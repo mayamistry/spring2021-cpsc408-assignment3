@@ -211,18 +211,20 @@ def printMenu():
 
 
 #Function that reads in the CSV file
-#FIGURE OUT HOW TO NOT REPEAT ROWS IN TABLE!!!!
 def readInCSV():
     # import data from csv
-    with open("./students.csv") as file:
-        num_records = 0
-        for row in file:
-            if num_records != 0:
-                mycursor.execute(
-                    "INSERT INTO Student(FirstName, LastName, Address, City, State, ZipCode, MobilePhoneNumber, Major, GPA) VALUES (?,?,?,?,?,?,?,?,?)",
-                    row.split(","))
-                conn.commit()
-            num_records += 1
+    data = mycursor.execute("SELECT * FROM Student")
+    if (data  == []):
+        with open("./students.csv") as file:
+            num_records = 0
+            for row in file:
+                if num_records != 0:
+                    mycursor.execute(
+                        "INSERT INTO Student(FirstName, LastName, Address, City, State, ZipCode, MobilePhoneNumber, Major, GPA) VALUES (?,?,?,?,?,?,?,?,?)",
+                        row.split(","))
+                    conn.commit()
+                num_records += 1
+
 
 # with open("./students.csv") as file:
 #     count = 0
