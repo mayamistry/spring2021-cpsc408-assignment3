@@ -1,16 +1,34 @@
-# This is a sample Python script.
+import data_ingestion as di
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+#Function that runs the main code of the program
+def run_assign3():
+    di.readInCSV()
+    userInput = ""
+    while (userInput != "6"):
+        di.printMenu()
+        userInput = input("Enter an option here: ")
+        if (userInput == "1"):
+            di.displayAll()
+        elif (userInput == "2"):
+            di.addNewStudent()
+        elif (userInput == "3"):
+            di.updateStudent()
+        elif (userInput == "4"):
+            di.deleteStudent()
+        elif (userInput == "5"):
+            di.displayByField()
+        elif (userInput == "6"):
+            di.conn.close()
+            print("Exiting program. Thank you!")
+            break
+        else:
+            print("Input invalid. Please try again. ")
+            continue
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    run_assign3()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+

@@ -2,10 +2,15 @@ import sqlite3
 import pandas as pd
 from pandas import DataFrame
 
+#Opens up database and cursor and closes when the user wants to end the program
+conn = sqlite3.connect('./StudentDB.db') #establish my connection
+mycursor = conn.cursor() #the cursor allows python to execute sql statements
+
 #Function that displays all information from student table
 def displayAll():
     mycursor.execute("SELECT * FROM Student;")
     students = mycursor.fetchall()
+    #This function below actually  prints out all rows and columns instead of just a few - found online
     pd.set_option("display.max_rows", None, "display.max_columns", None, "display.width", None)
     df = DataFrame(students,
                    columns=['StudentId', 'FirstName', 'LastName', 'GPA', 'Major', 'FacultyAdvisor', 'Address', 'City',
@@ -45,6 +50,7 @@ def updateStudent():
         checkStudent = input("Enter the student ID for which student's info you would like to update: ")
         mycursor.execute("SELECT * FROM Student WHERE StudentId = ?", [checkStudent])
         data = mycursor.fetchall()
+        #If the ID the user entered does not exsit in the table, then they need to keep trying again until they get it right
         if data == []:
             print("Student ID entered is invalid, please try again.")
             continue
@@ -65,6 +71,7 @@ def deleteStudent():
         checkStudent = input("Enter the student ID for which the student you would like to delete: ")
         mycursor.execute("SELECT * FROM Student WHERE StudentId = ?", [checkStudent])
         data = mycursor.fetchall()
+        #If the ID the user entered does not exsit in the table, then they need to keep trying again until they get it right
         if data == []:
             print("Student ID entered is invalid, please try again.")
             continue
@@ -96,6 +103,7 @@ def displayByField():
                 major = input("Enter a major you would like to see records for: ")
                 mycursor.execute("SELECT * FROM Student WHERE Major = ?", [major])
                 recordsByMajor = mycursor.fetchall()
+                #If the major the user entered does not exsit in the table, then they need to keep trying again until they get it right
                 if recordsByMajor == []:
                     print("This major doesn't exist, please try again.")
                     continue
@@ -118,6 +126,7 @@ def displayByField():
                 gpa = input("Enter a gpa you would like to see records for: ")
                 mycursor.execute("SELECT * FROM Student WHERE GPA = ?", [gpa])
                 recordsByGPA = mycursor.fetchall()
+                #If the GPA the user entered does not exsit in the table, then they need to keep trying again until they get it right
                 if recordsByGPA == []:
                     print("This gpa doesn't exist, please try again.")
                     continue
@@ -140,6 +149,7 @@ def displayByField():
                 city = input("Enter a city you would like to see records for: ")
                 mycursor.execute("SELECT * FROM Student WHERE City = ?", [city])
                 recordsByCity = mycursor.fetchall()
+                #If the city the user entered does not exsit in the table, then they need to keep trying again until they get it right
                 if recordsByCity == []:
                     print("This city doesn't exist, please try again.")
                     continue
@@ -162,6 +172,7 @@ def displayByField():
                 state = input("Enter a state you would like to see records for: ")
                 mycursor.execute("SELECT * FROM Student WHERE State = ?", [state])
                 recordsByState = mycursor.fetchall()
+                #If the state the user entered does not exsit in the table, then they need to keep trying again until they get it right
                 if recordsByState == []:
                     print("This state doesn't exist, please try again.")
                     continue
@@ -184,6 +195,7 @@ def displayByField():
                 advisor = input("Enter an advisor you would like to see records for: ")
                 mycursor.execute("SELECT * FROM Student WHERE FacultyAdvisor = ?", [advisor])
                 recordsByAdvisor = mycursor.fetchall()
+                #If the advisor the user entered does not exsit in the table, then they need to keep trying again until they get it right
                 if recordsByAdvisor == []:
                     print("This advisor doesn't exist, please try again.")
                     continue
@@ -214,6 +226,7 @@ def printMenu():
 def readInCSV():
     # import data from csv
     data = mycursor.execute("SELECT * FROM Student")
+    #Only import the csv if the table is empty otherwise it will repeat rows and values every time you run it
     if (data  == []):
         with open("./students.csv") as file:
             num_records = 0
@@ -226,50 +239,7 @@ def readInCSV():
                 num_records += 1
 
 
-# with open("./students.csv") as file:
-#     count = 0
-#     for row in file:
-#         if count != 0:
-#             row = row.split(",")
-#             firstName = row[0]
-#             lastName  = row[1]
-#             address = row[2]
-#             city = row[3]
-#             state = row[4]
-#             zipCode = row[5]
-#             phoneNumber = str(row[6])
-#             major = row[7]
-#             gpa = row[8]
-#             mycursor.execute("INSERT INTO Student(FirstName, LastName, Address, City, State, ZipCode, MobilePhoneNumber, Major, GPA) VALUES (?,?,?,?,?,?,?,?,?)", (firstName, lastName, address, city, state, zipCode, phoneNumber, major, gpa))
-#             conn.commit()
-#         count = count + 1
 
 
 
-#Main code
-conn = sqlite3.connect('./StudentDB.db') #establish my connection
-mycursor = conn.cursor() #the cursor allows python to execute sql statements
 
-readInCSV()
-userInput = ""
-while (userInput != "6"):
-    printMenu()
-    userInput = input("Enter an option here: ")
-    if (userInput ==  "1"):
-        displayAll()
-    elif (userInput == "2"):
-        addNewStudent()
-    elif (userInput == "3"):
-        updateStudent()
-    elif (userInput == "4"):
-        deleteStudent()
-    elif (userInput == "5"):
-        displayByField()
-    elif (userInput == "6"):
-        print("Exiting program. Thank you!")
-        break
-    else:
-        print("Input invalid. Please try again. ")
-        continue
-
-conn.close()
