@@ -225,7 +225,8 @@ def printMenu():
 #Function that reads in the CSV file
 def readInCSV():
     # import data from csv
-    data = mycursor.execute("SELECT * FROM Student")
+    mycursor = conn.execute("SELECT * FROM Student")
+    data = mycursor.fetchall()
     #Only import the csv if the table is empty otherwise it will repeat rows and values every time you run it
     if (data  == []):
         with open("./students.csv") as file:
